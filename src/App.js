@@ -3,22 +3,20 @@ import {useState, useEffect} from "react"
 import './App.css';
 
 function App() {
-  const [counter,setValue] = useState(0);
-  const [keyword, setKeyword] = useState('')
-  const onClick = () =>setValue((prev)=>prev+1)
-  const onChange = (event) => setKeyword(event.target.value)
-  
-  useEffect(()=>{console.log("search for",keyword)},[keyword])
+  const [toDo, setTodo] = useState('')
+  const onChange = (event)=>{
+    setTodo(event.target.value)
+  }
+
+console.log(toDo)
+
   return (
     <div className="App">
-      <input 
-      value = {keyword}
-      onChange = {onChange} 
-      type="text" 
-      placeholder="search here">
-      </input>
-      <hi>{counter}</hi>
-      <button onClick ={onClick}>click me</button>
+      <input onChange= {onChange} 
+              value = {toDo}
+              type = "text" 
+              placeholder = "wirte your to do">
+       </input>
     </div>
   );
 }

@@ -4,19 +4,34 @@ import './App.css';
 
 function App() {
   const [toDo, setTodo] = useState('')
-  const onChange = (event)=>{
+  const [toDos,setTodos] = useState([])
+  const onChange = (event) => {
     setTodo(event.target.value)
   }
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if( toDo === ""){
+      return;
+    }
+    
+    setTodos((currentArray) => [toDo,...currentArray])
+    setTodo("");
+    console.log(toDos)
+  }
 
-console.log(toDo)
 
+ //form submit 내장되어있음. 찾아보기
   return (
     <div className="App">
+      <h1>My ToDos({toDos.length})</h1>
+      <form onSubmit = {onSubmit}>
       <input onChange= {onChange} 
               value = {toDo}
               type = "text" 
               placeholder = "wirte your to do">
        </input>
+       <button>Add To Do</button>
+       </form>
     </div>
   );
 }

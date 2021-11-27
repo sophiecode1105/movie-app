@@ -3,43 +3,40 @@ import {useState, useEffect} from "react"
 import './App.css';
 
 function App() {
-  const [toDo, setTodo] = useState('')
-  const [toDos,setTodos] = useState([])
-  const onChange = (event) => {
-    setTodo(event.target.value)
-  }
-  const onSubmit = (event) => {
-    event.preventDefault();
-    if( toDo === ""){
-      return;
-    }
-    
-    setTodos((currentArray) => [toDo,...currentArray])
-    setTodo("");
-    console.log(toDos)
+  const [loading,setLoading] = useState(true)
+  const [coins, setCoins] = useState([])
+  const [dollors,setDollors] = useState('')
+  const [inverted,setInverted] = useState(true)
+
+  const onChange = (event)=>{
+    setDollors(event.target.value)
   }
 
+  const onClick = (event) =>{
+    setInverted((current) => !current)
+  }
 
- //form submit 내장되어있음. 찾아보기
-  return (
+  useEffect(()=>{
+    fetch("https://api.coinpaprika.com/v1/tickers")
+    .then((res)=>{
+      return res.json()
+    })
+    .then((data)=>setCoins(data))
+     setLoading(false)
+  },[] )
+  return ( //USD->BTC만들기 input만들어서
     <div className="App">
-      <h1>My ToDos({toDos.length})</h1>
-      <form onSubmit = {onSubmit}>
-      <input onChange= {onChange} 
-              value = {toDo}
-              type = "text" 
-              placeholder = "wirte your to do">
-       </input>
-       <button>Add To Do</button>
-       </form>
-       <hr />
-       <ul>
-       {toDos.map((todo, index)=>{
-        return <li key={index}>{todo}</li>
-       })}
-       </ul>
+      <h1>The Coins! ({coins.length})</h1>
+      {loading ? <strong>Loading...</strong> : null}
+      <select>
+        {coins.map((coin) =>  
+        <option>{coin.name}({coin.symbol}) : ${coin.quotes.USD.price}</option>)}
+      </select>
+      <input value = {inverted? dollors : dollors*10 } type = "text" onChange = {onChange}>
+      </input>
+      <button onClick = {onClick}>button</button>
     </div>
   );
 }
 
-export default App;
+export default App;//

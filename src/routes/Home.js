@@ -23,6 +23,7 @@ function Home (){
       <div className="App">
        {loading ? <h1>Loading...</h1> : <div>{movies.map((movie)=>{
             return <Movie coverImg = {movie.medium_cover_image} 
+                          id = {movie.id}
                           title = {movie.title} 
                           summary = {movie.summary} 
                           genres = {movie.genres}/>

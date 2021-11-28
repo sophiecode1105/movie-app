@@ -4,39 +4,37 @@ import './App.css';
 
 function App() {
   const [loading,setLoading] = useState(true)
-  const [coins, setCoins] = useState([])
-  const [dollors,setDollors] = useState('')
-  const [inverted,setInverted] = useState(true)
+  const [movies,setMovies] = useState([]);
+  const getMovies = async() => {
+    const response = await fetch(`https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year`)
+    const json = await response.json()
+    setMovies(json.data.movies)
+    setLoading(false)
 
-  const onChange = (event)=>{
-    setDollors(event.target.value)
   }
+ 
+  useEffect( ()=>{
+    getMovies()
+  } 
+  ,[])
+  console.log(movies)
 
-  const onClick = (event) =>{
-    setInverted((current) => !current)
-  }
-
-  useEffect(()=>{
-    fetch("https://api.coinpaprika.com/v1/tickers")
-    .then((res)=>{
-      return res.json()
-    })
-    .then((data)=>setCoins(data))
-     setLoading(false)
-  },[] )
-  return ( //USD->BTC만들기 input만들어서
+  return ( 
     <div className="App">
-      <h1>The Coins! ({coins.length})</h1>
-      {loading ? <strong>Loading...</strong> : null}
-      <select>
-        {coins.map((coin) =>  
-        <option>{coin.name}({coin.symbol}) : ${coin.quotes.USD.price}</option>)}
-      </select>
-      <input value = {inverted? dollors : dollors*10 } type = "text" onChange = {onChange}>
-      </input>
-      <button onClick = {onClick}>button</button>
+     {loading ? <h1>Loading...</h1> : <div>{movies.map((movie)=>{
+          return <div key={movie.id}>
+            <img src = {movie.medium_cover_image}></img>
+            <h2>{movie.title}</h2>
+            <p>{movie.summary}</p>
+            <ul>
+              {movie.genres.map(g => 
+              <li key = {g}>{g}</li>
+              )}
+            </ul>
+            </div>
+     })}</div>}
     </div>
   );
 }
 
-export default App;//
+export default App;
